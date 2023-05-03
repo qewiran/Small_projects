@@ -1,0 +1,14 @@
+clf;
+t = [-4 * pi:pi / 72:4 * pi];
+disp(size(t));
+figure(1);
+hold on;
+p1 = plot(t, sin(t), 'DisplayName', 'sin(x)');
+% p1.DisplayName=;
+p2 = plot(t, 2 * sin(t), 'DisplayName', '2sin(x)');
+% p2.DisplayName = ;
+p3 = plot (t, sin(2 * t), 'DisplayName', 'sin(2x)');
+% p3.DisplayName = ;
+p4 = plot (t, repmat(0,1,577), 'DisplayName', 'y');
+legend;
+hold off;
