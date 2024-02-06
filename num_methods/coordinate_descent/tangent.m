@@ -30,5 +30,8 @@ function tan = tangent(f, df, ddf, A, B)
         tan = b - a;
         printTableRow(countIter, a, c, f(c), df(c), f_a, df_a, b, df_b, countOper, countOperDf, tan);
     end
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3ce798f (delete useless)
 end
