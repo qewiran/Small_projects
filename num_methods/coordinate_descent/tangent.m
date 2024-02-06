@@ -10,7 +10,6 @@ function tan = tangent(f, df, ddf, A, B)
     f_b = f(b);
     df_b = ddf(b);
     tan = b - a;
-
     while (b - a) > 0.0005
         countIter = countIter + 1;
         countOperDf = countOperDf + 1;
