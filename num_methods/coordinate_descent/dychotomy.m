@@ -1,4 +1,4 @@
-function point = dychotomy(f, A, B, fileId)
+function p = dychotomy(f, A, B, fileId)
     countOper = 0;
     countIter = 0;
    
@@ -6,9 +6,9 @@ function point = dychotomy(f, A, B, fileId)
     b = B;
     
     printTableHeader("dychotomy", fileId);
-    point = (b - a) / 2;
+    p = (b - a) / 2;
    
-    while point > 0.0005
+    while p > 0.0005
         countIter = countIter + 1;
         mid = (a + b) / 2;
         c = mid -2.5e-4;
@@ -22,7 +22,7 @@ function point = dychotomy(f, A, B, fileId)
             a = c;
         end
         
-        point = (b - a) / 2;
+        p = (b - a) / 2;
         countOper = countOper + 2;
     end
 end
