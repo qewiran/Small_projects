@@ -1,4 +1,6 @@
-#pragma once
+#ifndef QR_DECOMPOSER_H
+#define QR_DECOMPOSER_H
+
 #include "../headers/Matrix.h"
 class QR_Decomposer
 {

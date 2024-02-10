@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LU_DECOMPOSER_H
+#ifndef LU_DECOMPOSER_H
+
 #include "../headers/Matrix.h"
 #include <tuple>
 

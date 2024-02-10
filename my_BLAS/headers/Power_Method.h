@@ -1,3 +1,5 @@
+#ifndef POWER_METHOD_H
+#define POWER_METHOD_H
 
 #include "Matrix.h"
 #include "LU_Decomposer.h"

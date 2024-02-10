@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ITERATION_METHOD_H
+#define ITERATION_METHOD_H
+
 #include "../headers/Matrix.h"
 class Iteration_Method
 {
