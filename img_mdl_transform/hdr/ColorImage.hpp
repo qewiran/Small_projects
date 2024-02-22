@@ -57,11 +57,12 @@ public:
     friend std::ostream& operator << <T>(std::ostream& os, const Point<T>& point);
 };
 
-template <typename T>
-class ColoredImage;
 
 template <typename T>
-std::ostream& operator<< (std::ostream& os, const ColoredImage<T>& img)
+class ColorImage;
+
+template <typename T>
+std::ostream& operator<< (std::ostream& os, const ColorImage<T>& img)
 {
     std::for_each(img.resource.begin(), img.resource.end(), [&](const vector<Point<T>>& row)
         {
@@ -76,24 +77,24 @@ std::ostream& operator<< (std::ostream& os, const ColoredImage<T>& img)
 
 
 template <typename T>
-class ColoredImage
+class ColorImage
 {
 protected:
     vector <vector <Point<T>>> resource;
 
 public:
-    ColoredImage() = default;
+    ColorImage() = default;
 
-    ColoredImage(size_t rows, size_t cols)
+    ColorImage(size_t rows, size_t cols)
     {
         resource.resize(rows, vector<Point<T>>(cols));
         if (rows < resource.capacity() || cols < resource[0].capacity())
             resource.shrink_to_fit();
     }
 
-    ColoredImage(const vector<vector<Point<T>>>& init_resource) : resource(init_resource) {}
+    ColorImage(const vector<vector<Point<T>>>& init_resource) : resource(init_resource) {}
 
-    friend std::ostream& operator << <T>(std::ostream& os, const ColoredImage<T>& img);
+    friend std::ostream& operator << <T>(std::ostream& os, const ColorImage<T>& img);
 };
 
 
