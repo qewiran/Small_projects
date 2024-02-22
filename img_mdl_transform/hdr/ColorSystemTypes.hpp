@@ -7,11 +7,12 @@ using std::vector;
 const std::vector<double>
 D65_StandartIlluminant = { 95.04f, 100.f, 108.883f };
 
-
 class XYZ;
 class Lab;
 class HSV;
 class HLS;
+
+class CMYK;
 
 class RGB : public ColorImage<u_char>
 {
@@ -74,6 +75,13 @@ public:
     explicit operator HSV() const;
     explicit operator HLS() const;
     explicit operator XYZ() const;
+};
+
+class CMYK : public ColorImage<u_char, Point4>
+{
+public:
+    CMYK() = default;
+    CMYK(const vector<vector<Point4<u_char>>>& init_resource) :ColorImage<u_char, Point4>(init_resource) {}
 };
 
 #endif
