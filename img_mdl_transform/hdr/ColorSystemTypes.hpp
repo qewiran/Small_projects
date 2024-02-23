@@ -11,16 +11,15 @@ class XYZ;
 class Lab;
 class HSV;
 class HLS;
-
 class CMYK;
 
 class RGB : public ColorImage<u_char>
 {
 public:
-    RGB() = default;
+    RGB() {}
     RGB(const vector<vector<Point<u_char>>>& init_resource) :
         ColorImage<u_char>(init_resource) {}
-
+    explicit operator CMYK() const;
     explicit operator XYZ() const;
     explicit operator HSV() const;
     explicit operator HLS() const;
@@ -38,6 +37,7 @@ public:
     explicit operator HSV() const;
     explicit operator HLS() const;
     explicit operator Lab() const;
+    explicit operator CMYK() const;
 
 };
 
@@ -51,6 +51,7 @@ public:
     explicit operator HSV() const;
     explicit operator XYZ() const;
     explicit operator Lab() const;
+    explicit operator CMYK() const;
 };
 
 class HSV : public ColorImage<double>
@@ -63,6 +64,7 @@ public:
     explicit operator XYZ() const;
     explicit operator HLS() const;
     explicit operator Lab() const;
+    explicit operator CMYK() const;
 };
 
 class Lab : public ColorImage<double>
@@ -75,13 +77,20 @@ public:
     explicit operator HSV() const;
     explicit operator HLS() const;
     explicit operator XYZ() const;
+    explicit operator CMYK() const;
 };
 
 class CMYK : public ColorImage<u_char, Point4>
 {
 public:
     CMYK() = default;
-    CMYK(const vector<vector<Point4<u_char>>>& init_resource) :ColorImage<u_char, Point4>(init_resource) {}
+    CMYK(const vector<vector<Point4<u_char>>>& init_resource) : ColorImage<u_char, Point4>(init_resource) {}
+    explicit operator RGB() const;
+    explicit operator HSV() const;
+    explicit operator HLS() const;
+    explicit operator XYZ() const;
+    explicit operator Lab() const;
 };
+
 
 #endif

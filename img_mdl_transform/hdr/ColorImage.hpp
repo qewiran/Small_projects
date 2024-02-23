@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <cstdint>
 #include <cmath>
-#include <array>
 using std::vector;
 
 template <typename T>
@@ -66,6 +65,11 @@ public:
     Point4() : val4(static_cast<T>(0)) {}
     Point4(const Point4& other_point) :Point<T>(other_point), val4(other_point.val4) {}
     Point4(T val1, T val2, T val3, T val4) : Point<T>(val1, val2, val3), val4(val4) {}
+
+    operator std::tuple<T, T, T, T>() const
+    {
+        return std::make_tuple(val1, val2, val3, val4);
+    }
 };
 
 template <typename T, template <typename> typename PointType>
@@ -93,7 +97,7 @@ protected:
     vector <vector <PointType<T>>> resource;
 
 public:
-    ColorImage() = default;
+    ColorImage(){}
 
     ColorImage(size_t rows, size_t cols)
     {

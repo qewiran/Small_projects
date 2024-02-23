@@ -1,4 +1,5 @@
 #include "../hdr/ColorSystemTypes.hpp"
+#include <functional>
 
 using std::vector;
 
@@ -113,7 +114,8 @@ RGB::operator HLS() const
             double v_min = std::min(r, std::min(g, b));
             double l = (v_max + v_min) / 2.;
 
-            double s = l <= 0.5 + EPS && std::abs(v_max + v_min) < EPS ? (v_max - v_min) / (v_max + v_min) : (v_max - v_min) / (2 - (v_max + v_min));
+            double s = (l <= 0.5 + EPS && std::abs(v_max + v_min) > EPS) ?
+                (v_max - v_min) / (v_max + v_min) : (v_max - v_min) / (2 - (v_max + v_min));
 
             double h = -1.;
 
@@ -135,7 +137,7 @@ RGB::operator HLS() const
                 }
             }
             if (h < 0.) h += 360.;
-            newRow.emplace_back(h / 2., s * 255., l * 255.);
+            newRow.emplace_back(h / 2., l * 255., s * 255.);
             });
         newValuesResource.emplace_back(newRow);
         });
@@ -169,10 +171,10 @@ XYZ::operator Lab() const
             x /= X_n;
             z /= Z_n;
             double l = (y >= 0.008856 + EPS) ? 116. * std::pow(y, 1. / 3.) - 16. : 903.3 * y;
-            double a = 500. * (f(x) - f(y)) + 128.;
-            double b = 200. * (f(y) - f(z)) + 128.;
+            double a = 500. * (f(x) - f(y));
+            double b = 200. * (f(y) - f(z));
 
-            newRow.emplace_back(l * 2.55, a, b);
+            newRow.emplace_back(l * 2.55, a + 128., b + 128.);
             });
         newValuesResource.emplace_back(newRow);
         });
@@ -231,9 +233,9 @@ HSV::operator RGB() const
 
             std::tuple<double, double, double> point_tuple = static_cast<std::tuple<double, double, double>>(point);
 
-            double h = std::get<0>(point_tuple)/255.;
-            double s = std::get<1>(point_tuple)/255.;
-            double v = std::get<2>(point_tuple)/255.;
+            double h = std::get<0>(point_tuple) / 255.;
+            double s = std::get<1>(point_tuple) / 255.;
+            double v = std::get<2>(point_tuple) / 255.;
 
             double r = -1.;
             double g = -1.;
@@ -290,7 +292,144 @@ HSV::operator Lab() const
     return static_cast<Lab>(static_cast<RGB>(*this));
 }
 
-// HLS::operator RGB() const
-// {
-    
-// }
+HLS::operator RGB() const
+{
+    vector<vector<Point<u_char>>> newValuesResource;
+    newValuesResource.reserve(resource.size());
+
+    std::for_each(resource.begin(), resource.end(), [&](const std::vector<Point<double>> row) {
+        vector<Point<u_char>> newRow; newRow.reserve(row.size());
+
+        std::for_each(row.begin(), row.end(), [&](Point<double> point) {
+
+            std::tuple<double, double, double> point_tuple = static_cast<std::tuple<double, double, double>>(point);
+
+            double h = std::get<0>(point_tuple);
+            double l = std::get<1>(point_tuple);
+            double s = std::get<2>(point_tuple);
+
+            double r = -1.;
+            double g = -1.;
+            double b = -1.;
+
+            if (s <= EPS) { r = l; g = l; b = l; }
+            else
+            {
+                double q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                double p = 2 * l - q;
+                std::function hueToRGB = [&](double t) {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1 / 6) return p + (q - p) * 6 * t;
+                    if (t < 1 / 2) return q;
+                    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                    return p;
+                    };
+                r = hueToRGB(h + 1. / 3.);
+                g = hueToRGB(h);
+                b = hueToRGB(h - 1. / 3.);
+
+            }
+            newRow.emplace_back(static_cast<u_char>(static_cast<u_int32_t>(std::round(r))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(g))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(b))));
+            });
+        newValuesResource.emplace_back(newRow);
+        });
+    return RGB(newValuesResource);
+}
+
+HLS::operator HSV() const
+{
+    return static_cast<HSV>(static_cast<RGB>(*this));
+}
+
+HLS::operator XYZ() const
+{
+    return static_cast<XYZ>(static_cast<RGB>(*this));
+}
+
+HLS::operator Lab() const
+{
+    return static_cast<Lab>(static_cast<RGB>(*this));
+}
+
+Lab::operator XYZ() const
+{
+    vector<vector<Point<double>>> newValuesResource;
+    newValuesResource.reserve(resource.size());
+
+    const double Z_n = 108.8754;
+    const double X_n = 95.0456;
+
+    std::for_each(resource.begin(), resource.end(), [&](const std::vector<Point<double>> row) {
+        vector<Point<double>> newRow; newRow.reserve(row.size());
+
+        std::for_each(row.begin(), row.end(), [&](Point<double> point) {
+
+            std::tuple<double, double, double> point_tuple = static_cast<std::tuple<double, double, double>>(point);
+
+            double l = std::get<0>(point_tuple);
+            double a = std::get<1>(point_tuple); a -= 128.;
+            double b = std::get<2>(point_tuple); b -= 128.;
+
+            double y = (l + 16.) / 116.;
+            double x = (a / 500.) + y;
+            double z = y - (b / 200.);
+
+            std::function checkVal = [](double t) {
+                return t >= ((6. / 29.) + EPS) ? std::pow(t, 3.) : (3. * (6. / 29.) * (6. / 29.) * (t - (4. / 29.)));
+                };
+
+            newRow.emplace_back(checkVal(x) * X_n / 100., checkVal(y), checkVal(z) * Z_n / 100.);
+            });
+        newValuesResource.emplace_back(newRow);
+        });
+    return XYZ(newValuesResource);
+}
+
+Lab::operator RGB() const
+{
+    return static_cast<RGB>(static_cast<XYZ>(*this));
+}
+
+Lab::operator HLS() const
+{
+    return static_cast<HLS>(static_cast<XYZ>(*this));
+}
+
+Lab::operator HSV() const
+{
+    return static_cast<HSV>(static_cast<XYZ>(*this));
+}
+
+RGB::operator CMYK() const
+{
+    vector<vector<Point4<u_char>>> newValuesResource;
+    newValuesResource.reserve(resource.size());
+
+    std::for_each(resource.begin(), resource.end(), [&](const std::vector<Point4<u_char>> row) {
+        vector<Point4<u_char>> newRow; newRow.reserve(row.size());
+
+        std::for_each(row.begin(), row.end(), [&](Point4<u_char> point) {
+
+            std::tuple<u_char, u_char, u_char, u_char> point_tuple = static_cast<std::tuple<u_char, u_char, u_char, u_char>>(point);
+
+            double r = static_cast<double>(std::get<0>(point_tuple)); r /= 255.;
+            double g = static_cast<double>(std::get<1>(point_tuple)); g /= 255.;
+            double b = static_cast<double>(std::get<2>(point_tuple)); b /= 255.;
+
+            double k = 1. - std::max(r, std::max(g, b));
+            double c = (1. - r - k) / (1 - k);
+            double m = (1. - g - k) / (1 - k);
+            double y = (1. - b - k) / (1 - k);
+
+            newRow.emplace_back(static_cast<u_char>(static_cast<u_int32_t>(std::round(c))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(m))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(y))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(k))));
+            });
+        newValuesResource.emplace_back(newRow);
+        });
+    return CMYK(newValuesResource);
+}
