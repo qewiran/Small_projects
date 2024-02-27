@@ -22,6 +22,7 @@ std::ostream& operator<< (std::ostream& os, const Point<T>& point)
 template <typename T>
 class Point
 {
+protected:
     T val1; T val2; T val3;
 public:
     Point() :
@@ -58,7 +59,17 @@ public:
 };
 
 template <typename T>
-class Point4 :Point<T>
+class Point4;
+
+template <typename T>
+std::ostream& operator<< (std::ostream& os, const Point4<T>& point)
+{
+    os << '[' << +(point.val1) << ", " << +(point.val2) << ", " << +(point.val3) << ", " << +(point.val4) << ']';
+    return os;
+}
+
+template <typename T>
+class Point4 :protected Point<T>
 {
     T val4;
 public:
@@ -68,8 +79,9 @@ public:
 
     operator std::tuple<T, T, T, T>() const
     {
-        return std::make_tuple(val1, val2, val3, val4);
+        return std::make_tuple(this->val1, this->val2, this->val3, val4);
     }
+    friend std::ostream& operator << <T>(std::ostream& os, const Point4<T>& point);
 };
 
 template <typename T, template <typename> typename PointType>
@@ -97,7 +109,7 @@ protected:
     vector <vector <PointType<T>>> resource;
 
 public:
-    ColorImage(){}
+    ColorImage() {}
 
     ColorImage(size_t rows, size_t cols)
     {

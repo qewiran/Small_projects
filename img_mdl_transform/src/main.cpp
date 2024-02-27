@@ -9,18 +9,6 @@
 
 using std::vector;
 
-struct A
-{
-    A() { std::cout << "A ctr\n"; }
-    A(int) { std::cout << "A overloaded ctr\n"; }
-};
-
-struct B : public A
-{
-    B() { std::cout << "B ctr\n"; }
-    B(int v) : A(v) { std::cout << "B overloaded ctr\n"; }
-};
-
 int main()
 {
     vector<vector<Point<u_char>>> v;
@@ -35,21 +23,18 @@ int main()
             matRGB.at<cv::Vec3b>(i, j) = cv::Vec3b(i * 10 + 100 * j, i * 5 + 10 * j, 100 * i + 10 * j);
         }
 
-    cv::Mat matXYZ;
-    cv::cvtColor(matRGB, matXYZ, cv::COLOR_RGB2XYZ);
+    // cv::Mat matXYZ;
+    // cv::cvtColor(matRGB, matXYZ, cv::COLOR_RGB2XYZ);
 
-    std::cout << "matXYZ:\n" << matXYZ << '\n';
+    std::cout << "matRGB:\n" << matRGB << '\n';
 
     RGB rgb{ v };
     // std::cout << "rgb:\n" << rgb << '\n';
 
-    Lab lab = static_cast<Lab>(rgb);
-    std::cout << "lab:\n" << lab << '\n';       
-    
-    // HSV hsv = static_cast<HSV>(rgb);
+    CMYK cmyk = static_cast<CMYK>(rgb);
+    std::cout << "lab:\n" << cmyk << '\n';
 
-    XYZ xyz_new = static_cast<XYZ>(lab);
-    std::cout << "xyz:\n" << xyz_new << '\n';
+
 
 
 

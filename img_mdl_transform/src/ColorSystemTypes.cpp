@@ -408,28 +408,108 @@ RGB::operator CMYK() const
     vector<vector<Point4<u_char>>> newValuesResource;
     newValuesResource.reserve(resource.size());
 
-    std::for_each(resource.begin(), resource.end(), [&](const std::vector<Point4<u_char>> row) {
+    std::for_each(resource.begin(), resource.end(), [&](const std::vector<Point<u_char>> row) {
+
         vector<Point4<u_char>> newRow; newRow.reserve(row.size());
 
-        std::for_each(row.begin(), row.end(), [&](Point4<u_char> point) {
+        std::for_each(row.begin(), row.end(), [&](Point<u_char> point) {
 
-            std::tuple<u_char, u_char, u_char, u_char> point_tuple = static_cast<std::tuple<u_char, u_char, u_char, u_char>>(point);
+            std::tuple<u_char, u_char, u_char> point_tuple = static_cast<std::tuple< u_char, u_char, u_char>>(point);
 
             double r = static_cast<double>(std::get<0>(point_tuple)); r /= 255.;
             double g = static_cast<double>(std::get<1>(point_tuple)); g /= 255.;
             double b = static_cast<double>(std::get<2>(point_tuple)); b /= 255.;
 
-            double k = 1. - std::max(r, std::max(g, b));
-            double c = (1. - r - k) / (1 - k);
-            double m = (1. - g - k) / (1 - k);
-            double y = (1. - b - k) / (1 - k);
+            double k = (1. - std::max(r, std::max(g, b)));
+            double c, m, y;
+            if (std::abs(1. - k) < EPS)
+            {
+                c = 0.; m = 0.; y = 0.;
+            }
+            else
+            {
+                c = 100. * (1. - r - k) / (1. - k);
+                m = 100. * (1. - g - k) / (1. - k);
+                y = 100. * (1. - b - k) / (1. - k);
 
+            }
+
+            std::cout << r << " " << g << " " << b << "\n";
+            std::cout << c << " " << m << " " << y << ' ' << k << "\n";
             newRow.emplace_back(static_cast<u_char>(static_cast<u_int32_t>(std::round(c))),
                 static_cast<u_char>(static_cast<u_int32_t>(std::round(m))),
                 static_cast<u_char>(static_cast<u_int32_t>(std::round(y))),
-                static_cast<u_char>(static_cast<u_int32_t>(std::round(k))));
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(100. * k))));
             });
         newValuesResource.emplace_back(newRow);
         });
     return CMYK(newValuesResource);
+}
+
+HLS::operator CMYK() const
+{
+    return static_cast<CMYK>(static_cast<RGB>(*this));
+}
+
+HSV::operator CMYK() const
+{
+    return static_cast<CMYK>(static_cast<RGB>(*this));
+}
+
+Lab::operator CMYK() const
+{
+    return static_cast<CMYK>(static_cast<RGB>(*this));
+}
+
+XYZ::operator CMYK() const
+{
+    return static_cast<CMYK>(static_cast<RGB>(*this));
+}
+
+CMYK::operator RGB() const
+{
+    vector<vector<Point<u_char>>> newValuesResource;
+    newValuesResource.reserve(resource.size());
+
+    std::for_each(resource.begin(), resource.end(), [&](const std::vector<Point4<u_char>> row) {
+
+        vector<Point<u_char>> newRow; newRow.reserve(row.size());
+
+        std::for_each(row.begin(), row.end(), [&](Point4<u_char> point) {
+
+            std::tuple<u_char, u_char, u_char, u_char> point_tuple = static_cast<std::tuple<u_char, u_char, u_char, u_char>>(point);
+
+            double c = static_cast<double>(std::get<0>(point_tuple)); c /= 100.;
+            double m = static_cast<double>(std::get<1>(point_tuple)); m /= 100.;
+            double y = static_cast<double>(std::get<2>(point_tuple)); y /= 100.;
+            double k = static_cast<double>(std::get<3>(point_tuple)); k /= 100.;
+
+            double r = 255. * (1. - c) / (1. - k);
+            double g = 255. * (1. - m) / (1. - k);
+            double b = 255. * (1. - y) / (1. - k);
+
+            newRow.emplace_back(static_cast<u_char>(static_cast<u_int32_t>(std::round(r))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(g))),
+                static_cast<u_char>(static_cast<u_int32_t>(std::round(b))));
+            });
+        newValuesResource.emplace_back(newRow);
+        });
+    return RGB(newValuesResource);
+}
+
+CMYK::operator Lab() const
+{
+    return static_cast<Lab>(static_cast<RGB>(*this));
+}
+CMYK::operator HSV() const
+{
+    return static_cast<HSV>(static_cast<RGB>(*this));
+}
+CMYK::operator HLS() const
+{
+    return static_cast<HLS>(static_cast<RGB>(*this));
+}
+CMYK::operator XYZ() const
+{
+    return static_cast<XYZ>(static_cast<RGB>(*this));
 }
