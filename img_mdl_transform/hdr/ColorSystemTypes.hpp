@@ -84,7 +84,8 @@ class CMYK : public ColorImage<u_char, Point4>
 {
 public:
     CMYK() = default;
-    CMYK(const vector<vector<Point4<u_char>>>& init_resource) : ColorImage<u_char, Point4>(init_resource) {}
+    CMYK(const vector<vector<Point4<u_char>>>& init_resource) :
+        ColorImage<u_char, Point4>(init_resource) {}
     explicit operator RGB() const;
     explicit operator HSV() const;
     explicit operator HLS() const;

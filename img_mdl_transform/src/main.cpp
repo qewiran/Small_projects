@@ -13,26 +13,26 @@ int main()
 {
     vector<vector<Point<u_char>>> v;
 
-    v.resize(5, vector<Point<u_char>>(5));
-    cv::Mat matRGB(cv::Size2d(5, 5), CV_8UC3);
+    v.resize(1, vector<Point<u_char>>(1));
+    cv::Mat matRGB(cv::Size2d(1, 1), CV_8UC3);
 
-    for (size_t i = 0; i < 5; ++i)
-        for (size_t j = 0; j < 5; ++j)
+    for (size_t i = 0; i < 1; ++i)
+        for (size_t j = 0; j < 1; ++j)
         {
-            v.at(i).at(j) = std::make_tuple(i * 10 + 100 * j, i * 5 + 10 * j, 100 * i + 10 * j);
-            matRGB.at<cv::Vec3b>(i, j) = cv::Vec3b(i * 10 + 100 * j, i * 5 + 10 * j, 100 * i + 10 * j);
+            v.at(i).at(j) = std::make_tuple(100, 20, 45);
+            matRGB.at<cv::Vec3b>(i, j) = cv::Vec3b(100, 20, 45);
         }
 
-    // cv::Mat matXYZ;
-    // cv::cvtColor(matRGB, matXYZ, cv::COLOR_RGB2XYZ);
+    cv::Mat matHSV;
+    cv::cvtColor(matRGB, matHSV, cv::COLOR_RGB2HSV);
 
-    std::cout << "matRGB:\n" << matRGB << '\n';
+    std::cout << "matHSV:\n" << matHSV << '\n';
 
     RGB rgb{ v };
     // std::cout << "rgb:\n" << rgb << '\n';
 
-    CMYK cmyk = static_cast<CMYK>(rgb);
-    std::cout << "lab:\n" << cmyk << '\n';
+    HSV hsv = static_cast<HSV>(rgb);
+    std::cout << "hsv:\n" << hsv << '\n';
 
 
 
