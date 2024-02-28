@@ -434,6 +434,8 @@ RGB::operator CMYK() const
 
             }
 
+            std::cout << r << " " << g << " " << b << "\n";
+            std::cout << c << " " << m << " " << y << ' ' << k << "\n";
             newRow.emplace_back(static_cast<u_char>(static_cast<u_int32_t>(std::round(c))),
                 static_cast<u_char>(static_cast<u_int32_t>(std::round(m))),
                 static_cast<u_char>(static_cast<u_int32_t>(std::round(y))),
@@ -499,17 +501,14 @@ CMYK::operator Lab() const
 {
     return static_cast<Lab>(static_cast<RGB>(*this));
 }
-
 CMYK::operator HSV() const
 {
     return static_cast<HSV>(static_cast<RGB>(*this));
 }
-
 CMYK::operator HLS() const
 {
     return static_cast<HLS>(static_cast<RGB>(*this));
 }
-
 CMYK::operator XYZ() const
 {
     return static_cast<XYZ>(static_cast<RGB>(*this));
