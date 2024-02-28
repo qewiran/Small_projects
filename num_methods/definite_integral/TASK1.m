@@ -23,5 +23,5 @@ J_NC = CIQF(f, a_b, 2, 3, "NC")
 J_G = CIQF(f, a_b, 2, 3, "G")
 
 % 3) выбор оптимального числа узлов
-k_opt = optCount(f, a_b,[1 3 5], "G", I)
+k_opt = optCount(f, a_b,[2 3 5], "G", I)
 
