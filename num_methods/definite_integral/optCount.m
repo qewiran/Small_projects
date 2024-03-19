@@ -6,7 +6,7 @@ n = length(nodesCount_init);
 
 nodesCount = nodesCount_init; S = zeros(1, n);
 
-while ((R > epsilon) && (abs(m1 - m0) > 1/10))
+while ((R > epsilon) || (abs(m1 - m0) > 1/10))
     m0 = m1;
     nodesCount = (nodesCount-1) .* L+1;
     for j = 1:n
@@ -17,9 +17,8 @@ while ((R > epsilon) && (abs(m1 - m0) > 1/10))
     R = abs(S(3) - S(2)) / (L ^ (m1) - 1);
     
     disp("values: ");
-    disp([nodesCount(2), R, S(2)-I, m1, m0]);
+    disp([nodesCount(3), R, S(3)-I, m1, m0]);
    
-    
 end
 
 nodesCount_opt = nodesCount(2);

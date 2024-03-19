@@ -13,7 +13,7 @@ X = linspace (a_b(1),a_b(2),3);
 J_NC = CIQF(f, a_b, 2, 3, "NC")
 
 % % 3) выбор оптимального числа узлов
- k_opt = optCount(f,a_b,[2 3 5], "NC", I)
+k_opt = optCount(f,a_b,[2 3 5], "NC", I)
 
 % % Гаусс метод:
 
