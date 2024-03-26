@@ -1,5 +1,5 @@
 #ifndef LU_DECOMPOSER_H
-#ifndef LU_DECOMPOSER_H
+#define LU_DECOMPOSER_H
 
 #include "../headers/Matrix.h"
 #include <tuple>
@@ -28,3 +28,5 @@ public:
     Matrix GetInverted();
     double GetConditionNumber();
 };
+
+#endif /* LU_DECOMPOSER_H*/

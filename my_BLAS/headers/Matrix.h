@@ -1,75 +1,63 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include <cstdlib>
-#include <vector>
+#include <algorithm>
+#include <array>
 #include <cmath>
-#include <stdexcept>
+#include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 #include <utility>
 
-class LU_Decomposer;
-class Matrix
-{
-    friend class LU_Decomposer;
+template <typename Field, size_t ROWS, size_t COLUMNS> class Matrix {
 
 private:
-    int n = 0, m = 0;
-    int rank = 0;
-    std::vector<std::vector<double>> rows;
+  size_t rank = 0;
+  std::array<Field, ROWS * COLUMNS> data;
 
 public:
-    int GetRank() const;
-    int GetN() const;
-    int GetM() const;
-    double max_row_abs = 0.0;
+  using Iterator = typename std::array<Field, ROWS * COLUMNS>::iterator;
+  using ConstIterator =
+      typename std::array<Field, ROWS * COLUMNS>::const_iterator;
 
-    void SwapRows(int, int);
-    void SwapCols(int, int);
-    void MakeRandom(bool);
+  size_t getRank() const { return rank; }
 
-    void MakeCustom();
-    void MakeIdentity();
+  Field max_row_abs = 0.0; /* need later for algorithms*/
 
-    Matrix() = default;
-    Matrix(int, int);
-    Matrix(const Matrix &);
-    Matrix(Matrix &&) noexcept;
-    ~Matrix() = default;
+  void swapRows(size_t idx1, size_t idx2) {
+    ConstIterator row1 = this->cbegin();
+  }
+  void swapCols(size_t, size_t);
+  void makeRandom(bool);
 
-    Matrix &operator*(const Matrix &);
-    Matrix const &operator*(const Matrix &) const;
+  void makeCustom();
+  void makeIdentity();
 
-    Matrix &operator*(const double k);
-    Matrix const &operator*(const double k) const;
+  Matrix(const std::array<Field, ROWS * COLUMNS> &otherData)
+      : data(otherData) {}
 
-    Matrix &operator+(const Matrix &);
-    Matrix const &operator+(const Matrix &) const;
+  template <size_t N>
+  Matrix<Field, ROWS, N> operator*(
+      const Matrix<Field, COLUMNS, N> &) const; /* matrix multiplication */
 
-    Matrix &operator-(const Matrix &);
-    Matrix const &operator-(const Matrix &) const;
+  Matrix operator*(const Field coeff) const; /* multiplication by coefficient*/
 
-    Matrix &operator=(Matrix);
+  Matrix &operator+(const Matrix &) const;
 
-    std::vector<double> &operator[](const int);
-    std::vector<double> const &operator[](const int) const;
+  Matrix &operator-(const Matrix &) const;
 
-    void swap(Matrix &matrix1, Matrix &matrix2) noexcept;
-
-    Matrix Transposed() const;
-    void Display() const;
-    double EuclNorm() const;
-    double InfNorm() const;
+  Matrix transposed() const;
+  //   void display() const;
+  Field euclNorm() const;
+  Field infNorm() const;
+  Matrix diag(const Matrix &A);
 };
 
-Matrix diag(const Matrix &A);
+template <typename Field, size_t COLUMNS>
+using colVec = Matrix<Field, 1, COLUMNS>;
 
-std::vector<double> operator+(const std::vector<double> &v1,
-                              const std::vector<double> &v2);
+template <typename Field, size_t ROWS> using rowVec = Matrix<Field, ROWS, 1>;
 
-std::vector<double> operator-(const std::vector<double> &v1,
-                              const std::vector<double> &v2);
-
-std::vector<double> operator*(const std::vector<double> &v1, double k);
+#endif /*MATRIX_H*/

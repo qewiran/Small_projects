@@ -1,39 +1,39 @@
 #include "../headers/Matrix.h"
 
-std::vector<double> operator+(const std::vector<double> &v1,
-                              const std::vector<double> &v2)
-{
-    std::vector<double> result(v1.size());
-    for (int i = 0; i < v1.size(); i++)
-    {
-        result[i] = v1[i] + v2[i];
-    }
-    return result;
-}
+// std::vector<double> operator+(const std::vector<double> &v1,
+//                               const std::vector<double> &v2)
+// {
+//     std::vector<double> result(v1.size());
+//     for (int i = 0; i < v1.size(); i++)
+//     {
+//         result[i] = v1[i] + v2[i];
+//     }
+//     return result;
+// }
 
-std::vector<double> operator-(const std::vector<double> &v1,
-                              const std::vector<double> &v2)
-{
-    std::vector<double> result(v1.size());
-    for (int i = 0; i < v1.size(); i++)
-    {
-        result[i] = v1[i] - v2[i];
-    }
-    return result;
-}
-std::vector<double> operator*(const std::vector<double> &v1, double k)
-{
-    std::vector<double> result(v1.size());
+// std::vector<double> operator-(const std::vector<double> &v1,
+//                               const std::vector<double> &v2)
+// {
+//     std::vector<double> result(v1.size());
+//     for (int i = 0; i < v1.size(); i++)
+//     {
+//         result[i] = v1[i] - v2[i];
+//     }
+//     return result;
+// }
+// std::vector<double> operator*(const std::vector<double> &v1, double k)
+// {
+//     std::vector<double> result(v1.size());
 
-    for (int i = 0; i < v1.size(); i++)
-    {
-        result[i] = v1[i] * k;
-    }
-    return result;
-}
+//     for (int i = 0; i < v1.size(); i++)
+//     {
+//         result[i] = v1[i] * k;
+//     }
+//     return result;
+// }
 
-
-Matrix diag(const Matrix &A)
+    
+Matrix Matrix::diag(const Matrix &A)
 {
     size_t N = A.GetN();
     size_t M = A.GetM();

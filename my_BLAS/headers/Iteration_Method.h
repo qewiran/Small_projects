@@ -22,3 +22,5 @@ public:
     Matrix *pB_r = nullptr;
     Matrix *pC = nullptr;
 };
+
+#endif /*ITERATION_METHOD_H*/

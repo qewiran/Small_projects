@@ -23,3 +23,5 @@ public:
 
 double sgn(double);
 Matrix HessenbergForm(const Matrix &);
+
+#endif /* QR_DECOMPOSER_H*/
