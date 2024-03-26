@@ -1,51 +1,66 @@
-#include <fstream>
-#include <sstream>
-#include <string>
 
+#include "../hdr/Triangle.hpp"
 #include "../hdr/bresenhamLine.hpp"
+#include "../hdr/objParser.hpp"
 
 static const int WIDTH = 800;
-static const int HEIGHT = 600;
+static const int HEIGHT = 800;
 
 int main() {
+
   std::ifstream input("african_head.obj");
   std::ofstream output("test.obj");
   cv::Mat img(HEIGHT, WIDTH, CV_8UC1);
 
   if (input.is_open()) {
+    std::vector<cv::Point2i> vertices;
+    vertices.emplace_back(0, 0);
+
     std::string kindOfInfo;
-    std::string coordinate_x1;
-    std::string coordinate_y1;
-    std::string coordinate_x2;
-    std::string coordinate_y2;
-    int x1 = WIDTH + 1;
-    int y1 = HEIGHT + 1;
-    int x2 = WIDTH + 1;
-    int y2 = HEIGHT + 1;
+
+    std::string coordinate_x;
+    std::string coordinate_y;
+
+    std::string index_v1;
+    std::string index_v2;
+    std::string index_v3;
+
+    int x, y;
+
+    int v1_idx;
+    int v2_idx;
+    int v3_idx;
+
     std::string line;
     while (std::getline(input, line)) {
       std::istringstream iss(line);
       iss >> kindOfInfo;
 
       if (kindOfInfo == "v") {
-        iss >> coordinate_x2 >> coordinate_y2;
+        iss >> coordinate_x >> coordinate_y;
 
-        double x2_ = std::stod(coordinate_x2) * WIDTH / 2;
-        double y2_ = std::stod(coordinate_y2) * HEIGHT / 2;
-        x2 = std::round(x2_);
-        y2 = std::round(y2_);
+        double x_ = std::stod(coordinate_x) * WIDTH / 2.;
+        double y_ = std::stod(coordinate_y) * HEIGHT / 2.;
 
-        if (x1 != WIDTH + 1) {
-          bresenhamLine(
-              img, cv::Point2i(WIDTH / 2 + x1, HEIGHT - (HEIGHT / 2 + y1)),
-              cv::Point2i(WIDTH / 2 + x2, HEIGHT - (HEIGHT / 2 + y2)));
-        }
-        std::cout << x2 << " " << y2 << "\n";
-        x1 = x2;
-        y1 = y2;
+        x = WIDTH / 2 + std::round(x_);
+        y = HEIGHT - (HEIGHT / 2 + std::round(y_));
+        vertices.emplace_back(x, y);
 
-      } else
-        break;
+      }
+      if (kindOfInfo == "f") {
+
+        iss >> index_v1 >> index_v2 >> index_v3;
+
+        v1_idx = std::stoi(index_v1.substr(0, index_v1.find_first_of('/')));
+        v2_idx = std::stoi(index_v2.substr(0, index_v2.find_first_of('/')));
+        v3_idx = std::stoi(index_v3.substr(0, index_v3.find_first_of('/')));
+
+        drawTriangle(img, Triangle(vertices[v1_idx], vertices[v2_idx],
+                                   vertices[v3_idx]));
+                                   
+        output << Triangle(vertices[v1_idx], vertices[v2_idx], vertices[v3_idx])
+               << '\n';
+      }
     }
   }
   input.close();
