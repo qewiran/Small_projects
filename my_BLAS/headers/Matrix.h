@@ -10,13 +10,18 @@
 #include <type_traits>
 #include <utility>
 
+#define EPS 1e-14
+
 template <typename Field, size_t ROWS, size_t COLUMNS> class Matrix {
 
 private:
-  size_t rank = 0;
   std::array<Field, ROWS * COLUMNS> data{};
+  size_t rank = 0;
 
 public:
+  void setRank(size_t rank) { this->rank = rank; }
+  size_t getRank() const { return rank; }
+
   using Iterator = typename std::array<Field, ROWS * COLUMNS>::iterator;
   using ConstIterator =
       typename std::array<Field, ROWS * COLUMNS>::const_iterator;
@@ -70,10 +75,10 @@ public:
       auto secndRowIt = this->begin() + COLUMNS * 2;
       auto thirdRowIt = this->begin() + COLUMNS * 3;
 
-      std::for_each(this->begin(), this->begin() + COLUMNS, [&](Field &elt) {
+      for (size_t j = 0; j < COLUMNS; ++j) {
         *secndRowIt = *firstRowIt - *zeroRowIt;
         *thirdRowIt = *firstRowIt + *zeroRowIt;
-      });
+      }
     }
   }
 
@@ -85,7 +90,6 @@ public:
 
   // make ones on diagonal and zeros elsewhere
   void makeIdentity() {
-
     auto it = this->begin();
 
     std::for_each(this->begin(), this->end(), [&](Field &elt) {
@@ -159,13 +163,31 @@ public:
     return result;
   }
 
+  Field getMaxRowSumAbs() const {
+    Field maxRowSumAbs = static_cast<int>(0);
+    Field rowSumAbs = static_cast<int>(0);
+    size_t iterations = 0;
+    std::for_each(this->cbegin(), this->cend(), [&](Field elt) {
+      if (iterations % COLUMNS == 0) {
+        rowSumAbs = static_cast<int>(0);
+        maxRowSumAbs = std::max(rowSumAbs, maxRowSumAbs);
+      } else
+        maxRowSumAbs += elt;
+    });
+
+    return maxRowSumAbs;
+  }
+
   friend std::ostream &operator<<(std::ostream &stream, const Matrix &mat) {
 
     size_t iterations = 0;
 
     std::for_each(mat.cbegin(), mat.cend(), [&](Field elt) {
       ++iterations;
-      stream << elt << (iterations % COLUMNS == 0 ? '\n' : ' ');
+      stream << (std::abs(elt) > static_cast<Field>(EPS)
+                     ? elt
+                     : static_cast<Field>(0))
+             << (iterations % COLUMNS == 0 ? '\n' : ' ');
     });
 
     return stream;
