@@ -68,7 +68,9 @@ Matrix<Field, ROWS, N> jacobiSolution(const Matrix<Field, ROWS, COLUMNS> &A,
 
   while (q / (1 - q) * norm > static_cast<Field>(EPS)) {
     curr = B * prev + C;
+    // auto diff = curr + (prev * static_cast<Field>(-1));
     norm = (curr + (prev * static_cast<Field>(-1))).euclNorm();
+    std::cout << norm << '\n';
     ++k_iter;
     prev = curr;
   }
@@ -102,11 +104,10 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
   auto curr = prev;
   Field norm = curr.euclNorm();
 
-  std::cout << "prev: " << prev << "\ncurr: " << curr << '\n';
   while (q / (1 - q) * norm > static_cast<Field>(EPS)) {
     for (size_t i = 0; i < ROWS; ++i) {
       curr[i, 0] = static_cast<Field>(0);
-      for (size_t j = 0; j < i; ++j) {
+      for (size_t j = 0; j < COLUMNS; ++j) {
         if (j < i)
           curr[i, 0] = curr[i, 0] + B_l[i, j] * curr[j, 0];
         else
@@ -118,7 +119,7 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
     ++k_iter;
     prev = curr;
   }
-  // std::cout << "k: " << k_iter << '\n';
+  std::cout << "k: " << k_iter << '\n';
   return curr;
 }
 
