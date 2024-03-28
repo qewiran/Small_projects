@@ -49,8 +49,9 @@ Matrix<Field, ROWS, N> jacobiSolution(const Matrix<Field, ROWS, COLUMNS> &A,
   auto &L = decomp.L;
   auto &R = decomp.R;
 
-  auto B = invert(D) * (L + R) * static_cast<Field>(-1);
-  auto C = invert(D) * b;
+  auto Dinv = invert(D);
+  auto B = Dinv * (L + R) * static_cast<Field>(-1);
+  auto C = Dinv * b;
 
   Field B_norm = B.euclNorm();
   Field C_norm = C.euclNorm();
@@ -82,10 +83,11 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
   auto &L = decomp.L;
   auto &R = decomp.R;
 
-  auto B = invert(D) * (L + R) * static_cast<Field>(-1);
-  auto B_l = invert(D) * L * static_cast<Field>(-1);
-  auto B_r = invert(D) * R * static_cast<Field>(-1);
-  auto C = invert(D) * b;
+  auto Dinv = invert(D);
+  auto B = Dinv * (L + R) * static_cast<Field>(-1);
+  auto B_l = Dinv * L * static_cast<Field>(-1);
+  auto B_r = Dinv * R * static_cast<Field>(-1);
+  auto C = Dinv * b;
 
   Field B_norm = B.euclNorm();
   Field C_norm = B.euclNorm();
