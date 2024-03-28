@@ -49,8 +49,8 @@ Matrix<Field, ROWS, N> jacobiSolution(const Matrix<Field, ROWS, COLUMNS> &A,
   auto &L = decomp.L;
   auto &R = decomp.R;
 
-  auto B = D * (L + R) * static_cast<Field>(-1);
-  auto C = D * b;
+  auto B = invert(D) * (L + R) * static_cast<Field>(-1);
+  auto C = invert(D) * b;
 
   Field B_norm = B.euclNorm();
   Field C_norm = C.euclNorm();
@@ -67,9 +67,7 @@ Matrix<Field, ROWS, N> jacobiSolution(const Matrix<Field, ROWS, COLUMNS> &A,
 
   while (q / (1 - q) * norm > static_cast<Field>(EPS)) {
     curr = B * prev + C;
-    // auto diff = curr + (prev * static_cast<Field>(-1));
     norm = (curr + (prev * static_cast<Field>(-1))).euclNorm();
-    std::cout << norm << '\n';
     ++k_iter;
     prev = curr;
   }
@@ -84,10 +82,10 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
   auto &L = decomp.L;
   auto &R = decomp.R;
 
-  auto B = D * (L + R) * static_cast<Field>(-1);
-  auto B_l = D * L * static_cast<Field>(-1);
-  auto B_r = D * R * static_cast<Field>(-1);
-  auto C = D * b;
+  auto B = invert(D) * (L + R) * static_cast<Field>(-1);
+  auto B_l = invert(D) * L * static_cast<Field>(-1);
+  auto B_r = invert(D) * R * static_cast<Field>(-1);
+  auto C = invert(D) * b;
 
   Field B_norm = B.euclNorm();
   Field C_norm = B.euclNorm();
@@ -102,10 +100,11 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
   auto curr = prev;
   Field norm = curr.euclNorm();
 
+  std::cout << "prev: " << prev << "\ncurr: " << curr << '\n';
   while (q / (1 - q) * norm > static_cast<Field>(EPS)) {
     for (size_t i = 0; i < ROWS; ++i) {
       curr[i, 0] = static_cast<Field>(0);
-      for (size_t j = 0; j < COLUMNS; ++j) {
+      for (size_t j = 0; j < i; ++j) {
         if (j < i)
           curr[i, 0] = curr[i, 0] + B_l[i, j] * curr[j, 0];
         else
@@ -117,7 +116,7 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
     ++k_iter;
     prev = curr;
   }
-  std::cout << "k: " << k_iter << '\n';
+  // std::cout << "k: " << k_iter << '\n';
   return curr;
 }
 
