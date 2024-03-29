@@ -27,7 +27,7 @@ Matrix HessenbergForm(const Matrix &A)
         s = 0.0;
         for (size_t i = j + 1; i < N; i++)
         {
-            s += Hess_form[i][j] * Hess_form[i][j];
+            s += Hess_form[i][j] * Hess _form[i][j];
         }
 
         s = std::sqrt(s) * -sgn(Hess_form[j + 1][j]);
@@ -57,9 +57,7 @@ void QR_Decomposer::DecompIteration(size_t len)
     size_t n = Hess_form->GetN();
     Matrix G(n, n);
     G.MakeIdentity();
-    Matrix E(n, n);
-    E.MakeIdentity();
-
+    
     *pR = *this->Hess_form;
     Matrix &R = *pR;
     Matrix &Q = *pQ;

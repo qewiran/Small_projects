@@ -34,12 +34,12 @@ public:
 
   // c++23 array subscript operator overload
 
-  inline Field operator[](size_t idx1, size_t idx2) const {
+  inline Field operator[](size_t idx1, size_t idx2 = 0) const {
     assert(idx1 < ROWS && idx2 < COLUMNS);
     return data[idx1 * COLUMNS + idx2];
   }
 
-  inline Field &operator[](size_t idx1, size_t idx2) {
+  inline Field &operator[](size_t idx1, size_t idx2 = 0) {
     assert(idx1 < ROWS && idx2 < COLUMNS);
     return data[idx1 * COLUMNS + idx2];
   }
@@ -91,9 +91,8 @@ public:
   // make ones on diagonal and zeros elsewhere
   void makeIdentity() {
     auto it = this->begin();
-
     std::for_each(this->begin(), this->end(), [&](Field &elt) {
-      std::distance(it, this->begin()) % (COLUMNS + 1) == 0
+      std::distance(this->begin(), it) % (COLUMNS + 1) == 0
           ? elt = static_cast<Field>(1)
           : elt = static_cast<Field>(0);
       ++it;
@@ -216,8 +215,8 @@ Matrix<Field, ROWS, COLUMNS> diag(const Matrix<Field, ROWS, COLUMNS> &mat) {
 }
 
 template <typename Field, size_t COLUMNS>
-using colVec = Matrix<Field, 1, COLUMNS>;
+using RowVec = Matrix<Field, 1, COLUMNS>;
 
-template <typename Field, size_t ROWS> using rowVec = Matrix<Field, ROWS, 1>;
+template <typename Field, size_t ROWS> using ColVec = Matrix<Field, ROWS, 1>;
 
 #endif /*MATRIX_H*/

@@ -106,14 +106,14 @@ Matrix<Field, ROWS, N> seidelSolution(const Matrix<Field, ROWS, COLUMNS> &A,
 
   while (q / (1 - q) * norm > static_cast<Field>(EPS)) {
     for (size_t i = 0; i < ROWS; ++i) {
-      curr[i, 0] = static_cast<Field>(0);
+      curr[i] = static_cast<Field>(0);
       for (size_t j = 0; j < COLUMNS; ++j) {
         if (j < i)
-          curr[i, 0] = curr[i, 0] + B_l[i, j] * curr[j, 0];
+          curr[i] = curr[i] + B_l[i, j] * curr[j];
         else
-          curr[i, 0] = curr[i, 0] + B_r[i, j] * prev[j, 0];
+          curr[i] = curr[i] + B_r[i, j] * prev[j];
       }
-      curr[i, 0] = curr[i, 0] + C[i, 0];
+      curr[i] = curr[i] + C[i];
     }
     norm = (curr + (prev * static_cast<Field>(-1))).euclNorm();
     ++k_iter;
