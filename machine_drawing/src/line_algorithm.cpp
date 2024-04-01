@@ -1,4 +1,6 @@
-#include "../hdr/bresenhamLine.hpp"
+
+#include "../hdr/line_algorithm.hpp"
+
 void bresenhamLineUp(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
   int dx = p2.x - p1.x;
   int dy = p2.y - p1.y;
@@ -67,5 +69,25 @@ void bresenhamLine(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
       bresenhamLineUp(img, p2, p1);
     else
       bresenhamLineUp(img, p1, p2);
+  }
+}
+
+void dda(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
+  int dx = p2.x - p1.x;
+  int dy = p2.y - p1.y;
+
+  double y = p1.y;
+  double x = p1.x;
+
+  int steps = std::abs(dx) > std::abs(dy) ? std::abs(dx) : std::abs(dy);
+
+  double x_increment = static_cast<double>(dx) / steps;
+  double y_increment = static_cast<double>(dy) / steps;
+
+  for (size_t i = 0; i < steps; ++i) {
+
+    img.at<uchar>(std::round(y), std::round(x)) = 255;
+    x += x_increment;
+    y += y_increment;
   }
 }
