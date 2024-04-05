@@ -1,7 +1,7 @@
 
 #include "../hdr/line_algorithm.hpp"
 
-void bresenhamLineUp(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
+void bresenhamLineUp(cv::Mat img, cv::Point2i p1, cv::Point2i p2, size_t color =255) {
   int dx = p2.x - p1.x;
   int dy = p2.y - p1.y;
 
@@ -18,7 +18,7 @@ void bresenhamLineUp(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
   int D = 2 * dx - dy;
 
   for (int y = p1.y; y < p2.y; y += y_step) {
-    img.at<u_char>(y, x) = 255;
+    img.at<u_char>(y, x) = color;
     if (D > 0) {
       x += x_step;
       D += 2 * (dx - dy);
@@ -27,7 +27,7 @@ void bresenhamLineUp(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
   }
 }
 
-void bresenhamLineDown(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
+void bresenhamLineDown(cv::Mat img, cv::Point2i p1, cv::Point2i p2, size_t color = 255) {
   int dx = p2.x - p1.x;
   int dy = p2.y - p1.y;
 
@@ -44,7 +44,7 @@ void bresenhamLineDown(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
   int D = 2 * dy - dx;
 
   for (int x = p1.x; x < p2.x; x += x_step) {
-    img.at<u_char>(y, x) = 255;
+    img.at<u_char>(y, x) = color;
     if (D > 0) {
       y += y_step;
       D += 2 * (dy - dx);
@@ -53,7 +53,7 @@ void bresenhamLineDown(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
   }
 }
 
-void bresenhamLine(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
+void bresenhamLine(cv::Mat img, cv::Point2i p1, cv::Point2i p2, size_t color =255) {
   int y2 = p2.y;
   int y1 = p1.y;
   int x2 = p2.x;
@@ -61,14 +61,14 @@ void bresenhamLine(cv::Mat img, cv::Point2i p1, cv::Point2i p2) {
 
   if (std::abs(y2 - y1) < std::abs(x2 - x1)) {
     if (x1 > x2)
-      bresenhamLineDown(img, p2, p1);
+      bresenhamLineDown(img, p2, p1, color);
     else
-      bresenhamLineDown(img, p1, p2);
+      bresenhamLineDown(img, p1, p2, color);
   } else {
     if (y1 > y2)
-      bresenhamLineUp(img, p2, p1);
+      bresenhamLineUp(img, p2, p1, color);
     else
-      bresenhamLineUp(img, p1, p2);
+      bresenhamLineUp(img, p1, p2, color);
   }
 }
 
