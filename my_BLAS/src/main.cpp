@@ -1,7 +1,7 @@
-#include "../headers/Iteration_Method.h"
-#include "../headers/LUdecomp.h"
-#include "../headers/Matrix.h"
-#include "../headers/QR_Decomposer.h"
+#include "../hdr/iter_method.hpp"
+#include "../hdr/LUdecomp.hpp"
+#include "../hdr/matrix.hpp"
+#include "../hdr/QRdecomp.hpp"
 #include <chrono>
 #include <thread>
 
