@@ -1,9 +1,7 @@
 #ifndef QR_DECOMPOSER_H
 #define QR_DECOMPOSER_H
 
-#include "../headers/Matrix.h"
-#define DELTA 1e-10
-
+#include "../hdr/matrix.hpp"
 template <typename Field> Field sgn(Field val) {
   return (static_cast<Field>(0) < val) - (val < static_cast<Field>(0));
 }
@@ -92,8 +90,8 @@ QRdecomp(const Matrix<Field, SIZE, SIZE> &mat) {
   Matrix<Field, SIZE, SIZE> I{};
   Matrix<Field, SIZE, SIZE> Q{};
   Matrix<Field, SIZE, SIZE> R{};
-  auto& Qr = Q;
-  auto& 
+  // auto& Qr = Q;
+  // auto& 
 
   I.makeIdentity();
 

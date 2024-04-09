@@ -1,7 +1,7 @@
 #ifndef ITERATION_METHOD_H
 #define ITERATION_METHOD_H
 
-#include "../headers/Matrix.h"
+#include "../hdr/matrix.hpp"
 
 template <typename Field, size_t ROWS, size_t COLUMNS> struct DLR {
   const Matrix<Field, ROWS, COLUMNS> &initMat;

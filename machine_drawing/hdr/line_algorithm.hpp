@@ -6,10 +6,10 @@
 #include <iostream>
 
 
-void bresenhamLineUp(cv::Mat, cv::Point2i, cv::Point2i);
-void bresenhamLineDown(cv::Mat, cv::Point2i, cv::Point2i);
+void bresenhamLineUp(cv::Mat, cv::Point2i, cv::Point2i, size_t );
+void bresenhamLineDown(cv::Mat, cv::Point2i, cv::Point2i, size_t);
 
-void bresenhamLine(cv::Mat, cv::Point2i, cv::Point2i);
+void bresenhamLine(cv::Mat, cv::Point2i, cv::Point2i, size_t);
 
 void dda(cv::Mat, cv::Point2i, cv::Point2i);
 #endif

@@ -1,7 +1,7 @@
 #ifndef LU_DECOMPOSER_H
 #define LU_DECOMPOSER_H
 
-#include "../headers/Matrix.h"
+#include "../hdr/matrix.hpp"
 #include <tuple>
 
 template <typename Field, size_t ROWS, size_t COLUMNS> struct LUPQ {
