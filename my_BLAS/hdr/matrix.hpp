@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <ctime>
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -11,7 +12,8 @@
 #include <utility>
 
 #define EPS 1e-14
-
+#define DELTA 1e-8
+#define rtol 1e-6
 template <typename Field, size_t ROWS, size_t COLUMNS> class Matrix {
 
 private:
@@ -65,7 +67,7 @@ public:
     std::srand(time(NULL));
 
     std::for_each(this->begin(), this->end(), [](Field &elt) {
-      elt = rand() % 100 * pow(-1.0, rand() % 7);
+      elt = rand() % 100 * std::pow(-1.0, rand() % 7);
     });
 
     // make determinant equal zero
@@ -113,7 +115,7 @@ public:
 
   // matrix multiplication
   template <size_t N>
-  Matrix<Field, ROWS, N> operator*(const Matrix<Field, COLUMNS, N> &other) {
+  Matrix<Field, ROWS, N> operator*(const Matrix<Field, COLUMNS, N> &other) const {
     Matrix<Field, ROWS, N> result{};
 
     for (size_t i = 0; i < ROWS; ++i) {
@@ -127,7 +129,7 @@ public:
   }
 
   // by element sum
-  Matrix operator+(const Matrix &other) {
+  Matrix operator+(const Matrix &other) const {
     Matrix result = *this;
 
     auto it = this->cbegin();

@@ -2,8 +2,6 @@
 #define QR_DECOMPOSER_H
 
 #include "../hdr/matrix.hpp"
-#define DELTA 1e-10
-
 template <typename Field> Field sgn(Field val) {
   return (static_cast<Field>(0) < val) - (val < static_cast<Field>(0));
 }
