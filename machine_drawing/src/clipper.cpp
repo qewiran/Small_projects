@@ -51,23 +51,10 @@ void LBclip(cv::Mat img, cv::Rect2i clipRect, cv::Point2i point1,
   xn1 = std::abs(point1.x + p2 * rn1);
   yn1 = std::abs(point1.y + p4 * rn1);
 
-<<<<<<< HEAD
-  xn2 = point1.x + p2 * rn2;
-  yn2 = point1.y + p4 * rn2;
-
-<<<<<<< ours
-  bresenhamLine(img, cv::Point(xn1, yn1), cv::Point(xn2, yn2));
-=======
-=======
->>>>>>> template_impl
   xn2 = std::abs(point1.x + p2 * rn2);
   yn2 = std::abs(point1.y + p4 * rn2);
   
   bresenhamLine(img, cv::Point2i(xn1, yn1), cv::Point2i(xn2, yn2), 255);
   bresenhamLine(img, point1, cv::Point2i(xn1, yn1), 100);
   bresenhamLine(img, cv::Point2i(xn2, yn2), point2, 100);
-<<<<<<< HEAD
->>>>>>> theirs
-=======
->>>>>>> template_impl
 }
