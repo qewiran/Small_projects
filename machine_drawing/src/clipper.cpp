@@ -1,8 +1,9 @@
 #include "../hdr/clipper.hpp"
 #include "../hdr/line_algorithm.hpp"
+#include "../hdr/shape.hpp"
 
 static const double EPS = 1e-14;
-void LBclip(cv::Mat img, cv::Rect2i clipRect, cv::Point2i point1,
+void LBclip(cv::Mat img, const Rectangle<>& clipRect, cv::Point2i point1,
             cv::Point2i point2) {
   double p1 = -(point2.x - point1.x);
   double p2 = -p1;
@@ -58,3 +59,5 @@ void LBclip(cv::Mat img, cv::Rect2i clipRect, cv::Point2i point1,
   bresenhamLine(img, point1, cv::Point2i(xn1, yn1), 100);
   bresenhamLine(img, cv::Point2i(xn2, yn2), point2, 100);
 }
+
+

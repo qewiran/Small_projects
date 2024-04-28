@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.22)
+project(DRAWING)
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set (CMAKE_CXX_STANDARD 23)
+
+find_package(OpenCV REQUIRED)
+
+add_executable(test)
+target_compile_features(test PUBLIC cxx_std_23)
+target_include_directories(test PUBLIC "${CMAKE_SOURCE_DIR}/hdr/")
+add_subdirectory(src)
+target_link_libraries(test ${OpenCV_LIBS} )
+target_include_directories( test PUBLIC ${OpenCV_INCLUDE_DIRS} )

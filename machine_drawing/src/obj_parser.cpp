@@ -51,9 +51,9 @@ void ObjParser::parse(cv::Mat img, const std::string &inPath,
           v1_idx = std::stoi(index_v1.substr(0, index_v1.find_first_of('/')));
           v2_idx = std::stoi(index_v2.substr(0, index_v2.find_first_of('/')));
           v3_idx = std::stoi(index_v3.substr(0, index_v3.find_first_of('/')));
-
-          drawTriangle(img, Triangle(vertices[v1_idx], vertices[v2_idx],
-                                     vertices[v3_idx]));
+          
+          Polygon<3,cv::Point2i>({vertices[v1_idx], vertices[v2_idx], vertices[v3_idx]}).draw(img, 255);
+          /* drawTriangle(img, Triangle()); */
         }
       }
       input.close();
