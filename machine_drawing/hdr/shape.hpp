@@ -3,6 +3,7 @@
 
 #include "line_algorithm.hpp"
 #include "opencv2/core/types.hpp"
+#include "opencv2/core/mat.hpp"
 #include <iostream>
 
 using color_t = size_t;

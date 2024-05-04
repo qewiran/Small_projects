@@ -1,6 +1,6 @@
 
 #include "../hdr/line_algorithm.hpp"
-
+#include "opencv2/core/mat.hpp"
 void bresenhamLineUp(cv::Mat img, cv::Point2i p1, cv::Point2i p2, size_t color =255) {
   int dx = p2.x - p1.x;
   int dy = p2.y - p1.y;
