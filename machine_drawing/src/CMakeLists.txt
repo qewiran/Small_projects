@@ -1,1 +1,1 @@
-target_sources(test PUBLIC main.cpp line_algorithm.cpp clipper.cpp)
+target_sources(test PUBLIC transform_task.cpp line_algorithm.cpp clipper.cpp)

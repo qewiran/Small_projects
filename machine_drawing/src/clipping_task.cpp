@@ -1,6 +1,7 @@
 #include "../hdr/shape.hpp"
 #include "../hdr/clipper.hpp"
 #include "../hdr/obj_parser.hpp"
+#include "opencv2/highgui.hpp"
 static const int WIDTH = 1280;
 static const int HEIGHT = 720;
 
