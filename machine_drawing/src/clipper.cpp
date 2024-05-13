@@ -65,7 +65,6 @@ CBlineParams CBclip(cv::Point2i p1, cv::Point2i p2, cv::Point2i windowPoint,
 
   double Q1 = (p1 - windowPoint).dot(normal);
   double P = (p2 - p1).dot(normal);
-
   bool out = P < 0;
   if (std::abs(P) < eps) {
     if (Q1 < eps)
