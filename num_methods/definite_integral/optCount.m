@@ -18,7 +18,8 @@ while ((R > epsilon) || (abs(m1 - m0) > 1/10))
     
     disp("values: ");
     disp([nodesCount(3), R, S(3)-I, m1, m0]);
-   
+    % X = linspace(limits(1),limits(2),nodesCount(3));
+    % plot(Lagrange(X,f(X)),"LineWidth",3,"Color", "m"); 
 end
 
 nodesCount_opt = nodesCount(2);
