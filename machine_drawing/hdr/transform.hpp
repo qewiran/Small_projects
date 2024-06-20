@@ -1,9 +1,10 @@
 #ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
-#include "opencv2/core/matx.hpp"
+#include <opencv2/core/matx.hpp>
 #include <array>
 #include <opencv2/core.hpp>
 #include <vector>
+#include <iostream>
 #include <utility>
 
 template <typename T, size_t ROWS, size_t COLS>
@@ -17,7 +18,7 @@ struct TransformMatx : public cv::Matx<T, ROWS, COLS> {
   TransformMatx(const cv::Matx<T, ROWS - 1, COLS> &matInit, T w) {
     for (size_t i = 0; i < ROWS - 1; ++i) {
       for (size_t j = 0; j < COLS; ++j) {
-        (*this)(i, j) = matInit(i, j);
+        (*this)(i, j) = matInit(i, j)*w;
       }
     }
 
@@ -32,10 +33,10 @@ struct TransformMatx : public cv::Matx<T, ROWS, COLS> {
     auto rotationMatx = cv::Matx<T, ROWS, ROWS>::eye();
     rotationMatx(axis1, axis1) = std::cos(angle);
     rotationMatx(axis1, axis2) = -std::sin(angle);
-    rotationMatx(axis2, axis1) = std::cos(angle);
-    rotationMatx(axis2, axis2) = std::sin(angle);
-
-    return (*this).t() * rotationMatx;
+    rotationMatx(axis2, axis1) = std::sin(angle);
+    rotationMatx(axis2, axis2) = std::cos(angle);
+    // std::cout<<rotationMatx<<'\n';
+    return (*this).t()* rotationMatx;
   }
 
   TransformMatx parTransp(const std::array<T, ROWS - 1> &transpVals) {
@@ -72,9 +73,9 @@ enum class ProjCategory {
 template <typename T, size_t N>
 TransformColVec<T, N>
 axonometricProj(const TransformColVec<T, N> &coordinate, ProjCategory projCat,
-            const std::vector<T> &angles = {45., 45.},
+            const std::vector<T> &angles = {30., 45.},
             const std::vector<std::pair<size_t, size_t>> &axesOrder = {
-                {1, 2}, {0, 2}}) {
+                {0, 1}, {1, 2}}) {
   TransformColVec<T, N> result = coordinate;
   for (size_t i = 0; i < static_cast<size_t>(projCat); ++i) {
     result = result.rotate(angles[i], axesOrder[i].first, axesOrder[i].second);
@@ -86,11 +87,11 @@ axonometricProj(const TransformColVec<T, N> &coordinate, ProjCategory projCat,
 }
 template <typename T, size_t N>
 TransformColVec<T, N> perspectiveProj(const TransformColVec<T, N> &coordinate,
-                                      int projCat, size_t axis, T projCenter) {
+                                      ProjCategory projCat, size_t axis, T projCenter) {
   TransformColVec<T, N> result = coordinate;
   auto perspectiveMat = cv::Matx<T, N, N>::eye();
   perspectiveMat(axis, axis) = static_cast<T>(0);
-  T r = -coordinate[axis] / projCenter;
+  T r = -1 / projCenter;
   perspectiveMat(axis, N - 1) = r;
   result = result.t() * perspectiveMat;
   return result;
